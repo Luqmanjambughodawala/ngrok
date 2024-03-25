@@ -20,7 +20,7 @@ jobs:
 
     - name: Extract
 
-      run: Expand-Archive ngrok.zip
+      run: Expand-Archive ngrok-v3-stable-windows-amd64.zip
 
     - name: Auth
 
