@@ -7,19 +7,40 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Download
-      run: Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip
+      run: |
+        Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
+        Write-Host "Downloaded ngrok archive"
     - name: List Files
-      run: ls
+      run: |
+        ls
+        Write-Host "Listed files in the directory"
     - name: Extract
-      run: Expand-Archive ngrok-v3-stable-windows-amd64.zip
+      run: |
+        Expand-Archive ngrok.zip -DestinationPath ngrok
+        Write-Host "Extracted ngrok archive"
     - name: Auth
-      run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+      run: |
+        .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+        Write-Host "Authenticated ngrok"
       env:
         NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
     - name: Enable TS
-      run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
-    - run: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-    - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
-    - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
+      run: |
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+        Write-Host "Enabled Terminal Server"
+    - name: Enable Remote Desktop Rule
+      run: |
+        Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+        Write-Host "Enabled Remote Desktop Rule"
+    - name: Set User Authentication
+      run: |
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 1
+        Write-Host "Set User Authentication"
+    - name: Set Local User
+      run: |
+        Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
+        Write-Host "Set Local User"
     - name: Create Tunnel
-      run: .\ngrok\ngrok.exe tcp 3389
+      run: |
+        .\ngrok\ngrok.exe tcp 3389
+        Write-Host "Created Tunnel"
