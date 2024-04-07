@@ -8,7 +8,7 @@ jobs:
     steps:
     - name: Download
       run: |
-        Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
+        Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip
         Write-Host "Downloaded ngrok archive"
     - name: List Files
       run: |
